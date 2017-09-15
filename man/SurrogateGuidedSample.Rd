@@ -5,7 +5,7 @@
 \title{SurrogateGuidedSample}
 \usage{
 SurrogateGuidedSample(df, n_sample = 100, stratify_var = NULL, nz1 = NULL,
-  nz0 = NULL, REPLACE = FALSE)
+  nz0 = NULL, REPLACE = FALSE, IS_SRS = FALSE)
 }
 \arguments{
 \item{df}{Input data frame}

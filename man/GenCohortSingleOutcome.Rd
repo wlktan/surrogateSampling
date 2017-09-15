@@ -5,8 +5,8 @@
 \title{GenCohortSingleOutcome}
 \usage{
 GenCohortSingleOutcome(n = 1e+05, p = 250, p_nonzero = 30,
-  probZ = c(0.065, 0.34, 0.62), probX = c(0.3), beta0 = -14.75,
-  betaZ = c(4.25, 2.25, 3.35), betaX = 0.7)
+  beta0 = -14.75, betaZ = c(4.25, 2.25, 3.35), betaX = 0.7,
+  probZ = c(0.065, 0.34, 0.62), probX = c(0.3))
 }
 \arguments{
 \item{n}{cohort size}
@@ -15,15 +15,15 @@ GenCohortSingleOutcome(n = 1e+05, p = 250, p_nonzero = 30,
 
 \item{p_nonzero}{number of nonzero features}
 
-\item{probZ}{vector of probabilities of potential surrogate, i.e. P(Z=1)}
-
-\item{probX}{vector of probabilities of features, i.e. P(X=1)}
-
 \item{beta0}{intercept; controls prevalence of finding}
 
 \item{betaZ}{vector of true coefficients for surrogate Z}
 
 \item{betaX}{vector of true coefficients for features X}
+
+\item{probZ}{vector of probabilities of potential surrogate, i.e. P(Z=1)}
+
+\item{probX}{vector of probabilities of features, i.e. P(X=1)}
 }
 \value{
 A list with the following components:
@@ -34,8 +34,8 @@ trueAUC: AUC of the population if true probabilities were known
 true.beta: Vector of true coefficients
 }
 \description{
-Generates a cohort based on logistic regression assummption
-with a single binary outcome, surrogates
+Generates a cohort with a single Bernoulli outcome
+with p features and length(betaZ) potential surrogates
 }
 \keyword{data}
 \keyword{generate}

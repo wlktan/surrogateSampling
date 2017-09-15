@@ -4,6 +4,7 @@
 #' surrogate guided sampling strategy
 #' @param train.model The trained model object
 #' @param val.df Data frame containing training data
+#' @param Y Column name of the binary outcome
 #' @keywords validate model
 #' @export
 #' @return A list of
@@ -11,9 +12,11 @@
 #'   auc_val: Estimated validation AUC
 #'
 ValidateModel <- function(train.model,
-                          val.df){
+                          val.df,
+                          Y = "Y"){
   val.X <- as.matrix(val.df[,grep("X|Z",names(val.df), perl=TRUE)])
-  val.Y <- val.df$Y
+  val.Y <- val.df[,Y] %>%
+    as.numeric(.)
 
   y1.eta <- rep(NA,length(which(val.Y == 1)))
   y0.eta <- rep(NA,length(which(val.Y == 0)))

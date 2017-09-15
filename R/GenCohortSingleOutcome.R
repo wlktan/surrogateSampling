@@ -1,15 +1,15 @@
 #' GenCohortSingleOutcome
 #'
-#' Generates a cohort based on logistic regression assummption
-#' with a single binary outcome, surrogates
+#' Generates a cohort with a single Bernoulli outcome
+#' with p features and length(betaZ) potential surrogates
 #' @param n cohort size
 #' @param p number of features
 #' @param p_nonzero number of nonzero features
-#' @param probZ vector of probabilities of potential surrogate, i.e. P(Z=1)
-#' @param probX vector of probabilities of features, i.e. P(X=1)
 #' @param beta0 intercept; controls prevalence of finding
 #' @param betaZ vector of true coefficients for surrogate Z
 #' @param betaX vector of true coefficients for features X
+#' @param probZ vector of probabilities of potential surrogate, i.e. P(Z=1)
+#' @param probX vector of probabilities of features, i.e. P(X=1)
 #' @keywords generate data
 #' @export
 #' @return A list with the following components:
@@ -22,11 +22,11 @@
 GenCohortSingleOutcome <- function(n = 100000,
                              p = 250,
                              p_nonzero = 30,
-                             probZ = c(0.065,0.34,0.62),
-                             probX = c(0.30),
                              beta0 = -14.75,
                              betaZ = c(4.25,2.25,3.35),
-                             betaX = 0.7){
+                             betaX = 0.7,
+                             probZ = c(0.065,0.34,0.62),
+                             probX = c(0.30)){
 
   # Checks inputs
   stopifnot(n > 0 | p > 0 | p_nonzero > 0) # cohort size and num features need to be positive

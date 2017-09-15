@@ -3,6 +3,7 @@
 #' Makes a sample enriched for cases using ideas from
 #' surrogate guided sampling strategy
 #' @param train.df Data frame containing training data
+#' @param Y Column name of the binary outcome
 #' @keywords train model
 #' @export
 #' @return A list of
@@ -11,10 +12,12 @@
 #'   auc_train: Estimated training AUC
 #'   train.model: The trained model object
 #'
-TrainModel <- function(train.df){
+TrainModel <- function(train.df,
+                       Y = "Y"){
 
   train.X <- as.matrix(train.df[,grep("X|Z",names(train.df), perl=TRUE)])
-  train.Y <- train.df$Y
+  train.Y <- train.df[,Y] %>%
+    unlist(.)
   n_cases <- sum(train.Y)
   train.model <- NULL
 
@@ -25,7 +28,7 @@ TrainModel <- function(train.df){
   auc_train <- 0.5
 
   ############################# TRAIN MODEL  #############################
-  train.model <- try(glm(train.Y~train.X,family = "binomial",
+  train.model <- try(glm(train.Y ~ train.X,family = "binomial",
                          control = list(epsilon = 1e-8,
                                         maxit = 100,
                                         trace = FALSE)))

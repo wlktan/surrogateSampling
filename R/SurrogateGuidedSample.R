@@ -20,10 +20,15 @@ SurrogateGuidedSample <- function(df,
                                  stratify_var = NULL,
                                  nz1 = NULL,
                                  nz0 = NULL,
-                                 REPLACE = FALSE){
+                                 REPLACE = FALSE,
+                                 IS_SRS = FALSE){
 
-  sampled.df <- df %>%
-    sample_n(n_sample)
+  stopifnot(IS_SRS | !is.null(stratify_var))
+
+  if(IS_SRS){
+    sampled.df <- df %>%
+      sample_n(n_sample)
+  }
 
   if(!is.null(stratify_var)){
     sample.z1 <- df %>%

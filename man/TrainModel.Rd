@@ -4,10 +4,12 @@
 \alias{TrainModel}
 \title{TrainModel}
 \usage{
-TrainModel(train.df)
+TrainModel(train.df, Y = "Y")
 }
 \arguments{
 \item{train.df}{Data frame containing training data}
+
+\item{Y}{Column name of the binary outcome}
 }
 \value{
 A list of
