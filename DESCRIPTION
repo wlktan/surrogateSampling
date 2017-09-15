@@ -1,0 +1,12 @@
+Package: surrogateSampling
+Title: Functions to conduct surrogate guided sampling designs
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Katherine", "Tan", email = "wlktan@uw.edu", role = c("aut", "cre"))
+    )
+Description: A bunch of helper functions for the simulations.
+Depends: R (>= 3.4.1)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1.9000
