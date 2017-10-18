@@ -4,12 +4,14 @@
 \alias{TrainModel}
 \title{TrainModel}
 \usage{
-TrainModel(train.df, Y = "Y")
+TrainModel(train.df, Y = "Y", model = "glm")
 }
 \arguments{
 \item{train.df}{Data frame containing training data}
 
 \item{Y}{Column name of the binary outcome}
+
+\item{model}{Whether to use a glm, lasso, or ridge model}
 }
 \value{
 A list of

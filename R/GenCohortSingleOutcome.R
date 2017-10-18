@@ -24,9 +24,9 @@ GenCohortSingleOutcome <- function(n = 100000,
                              p_nonzero = 30,
                              beta0 = -14.75,
                              betaZ = c(4.25,2.25,3.35),
-                             betaX = 0.7,
+                             betaX,
                              probZ = c(0.065,0.34,0.62),
-                             probX = c(0.30)){
+                             probX){
 
   # Checks inputs
   stopifnot(n > 0 | p > 0 | p_nonzero > 0) # cohort size and num features need to be positive
@@ -37,39 +37,23 @@ GenCohortSingleOutcome <- function(n = 100000,
 
   p_zero <- p - p_nonzero
 
-  if(length(betaX) < p){
-    if(length(betaX) == p_nonzero)
-      betaX <- c(betaX, rep(0, p_zero))
-    if(length(betaX) == 1)
-      betaX <- c(rep(betaX, p_nonzero), rep(0, p_zero))
-    else
-      print("Dimensions of betaX incorrect!")
-  }
-
-
   Z <- matrix(data = NA, nrow = n, ncol = length(probZ))
   for(i in 1:length(probZ)){
     Z[,i] <- rbinom(n,1,probZ[i])
   }
 
   ### No collinearity in X
-  X.sig <- matrix(rbinom(n*p_nonzero, 1, probX),
-                  nrow = n,
-                  ncol = p_nonzero,
-                  byrow = TRUE)
-  X.nosig <- matrix(rbinom(n*p_zero, 1, probX),
-                    nrow = n,
-                    ncol = p_zero,
-                    byrow = TRUE)
-  X <- cbind(X.sig, X.nosig)
+  X <- apply(as.data.frame(probX),
+             1,
+             function(x) rbinom(n,1,x))
 
   true.beta <- c(beta0, betaZ, betaX)
   yprob <- Expit(cbind(rep(1,n),Z,X) %*% true.beta)
-  Y <- apply(as.data.frame(yprob),1, function(x) rbinom(1,1,x))
-
+  Y <- rbinom(n,1,yprob)
+  
   trueAUC <- try(auc(Y,c(yprob)), silent = TRUE)
   if(class(trueAUC) == "try-error") trueAUC <- 0.5 # default
-
+ 
   return(list(X=X,
               Y=Y,
               Z=Z,

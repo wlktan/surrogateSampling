@@ -35,9 +35,9 @@ GenCohortMultiOutcome <- function(n,
                     matrix(betaX, nrow = p, ncol = K))
 
   ## Add correlations between Y's
-  if(!is.null(corr)){
+  if(!is.null(corr_y)){
     beta.mat <- cbind(beta.mat,
-                      rep(corr_y,K+p))
+                      corr_y)
   }
 
   # Generate design matrix
@@ -55,7 +55,7 @@ GenCohortMultiOutcome <- function(n,
   x <- cbind(Z, X.sig, X.nosig) # design matrix of size n x (K + p)
 
   # Data checks for dimensions
-  stopifnot(length(beta0) == K)
+  #stopifnot(length(beta0) == K)
   stopifnot(dim(betaZ.mat) == c(K,K))
   stopifnot(length(betaX) == p)
   #stopifnot(dim(beta.mat) == c(K + p, K))
@@ -64,10 +64,23 @@ GenCohortMultiOutcome <- function(n,
   stopifnot(dim(x) == c(n, K + p))
 
   # Generate one cohort
-  y <- mvb.simu(coefficients = beta.mat,
+  mvb.data <- mvb.simu(coefficients = beta.mat,
                 x = x,
                 K = K,
-                offset = beta0)$response
+                offset = beta0)
+  y <- mvb.data$response
+
+  ## Calculate predicted probabilities
+  eta <- x %*% mvb.data$beta
+  denom <- cbind(exp(eta[,1]), exp(eta[,2]), exp(apply(eta, 1, sum))) %>%
+    apply(., 1, sum) + 1
+  p11 <- exp(apply(eta, 1, sum))/denom
+  p01 <- exp(eta[,2])/denom
+  p10 <- exp(eta[,1])/denom
+
+  #  Marginal of MVB is Bernoulli
+  py1 <- p10 + p11 # P(Y=1) = p10 + p11
+  py2 <- p01 + p11
 
   metrics <- c()
   sens.tb <- matrix(data = NA, nrow = K, ncol = K)
@@ -79,7 +92,8 @@ GenCohortMultiOutcome <- function(n,
       if(i == j){
         metrics <- rbind(metrics,
                          c(Finding = j,
-                           CalcMetrics(test.vec = x[,i], truth.vec = y[,j])$metrics.list))
+                           CalcMetrics(test.vec = x[,i], truth.vec = y[,j])$metrics.list,
+                         true_auc = as.numeric(roc(y[,j], get(paste0("py",j)))$auc)))
       }
     }
   }

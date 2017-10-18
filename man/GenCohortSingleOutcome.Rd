@@ -5,8 +5,8 @@
 \title{GenCohortSingleOutcome}
 \usage{
 GenCohortSingleOutcome(n = 1e+05, p = 250, p_nonzero = 30,
-  beta0 = -14.75, betaZ = c(4.25, 2.25, 3.35), betaX = 0.7,
-  probZ = c(0.065, 0.34, 0.62), probX = c(0.3))
+  beta0 = -14.75, betaZ = c(4.25, 2.25, 3.35), betaX, probZ = c(0.065,
+  0.34, 0.62), probX)
 }
 \arguments{
 \item{n}{cohort size}

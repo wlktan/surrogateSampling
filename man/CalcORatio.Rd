@@ -4,14 +4,14 @@
 \alias{CalcORatio}
 \title{CalcORatio}
 \usage{
-CalcORatio(zsens, zspec, r = 0.5, pz)
+CalcORatio(zsens, zspec, R = 0.5, pz)
 }
 \arguments{
 \item{zsens}{numeric; sensitivity of the surrogate Z for the outcome}
 
 \item{zspec}{numeric; specificity of the surrogate Z for the outcome}
 
-\item{r}{numeric; ratio of surrogate positives in sample i.e. P(Z=1|S=1)}
+\item{R}{numeric; ratio of surrogate positives in sample i.e. P(Z=1|S=1)}
 
 \item{pz}{numeric; prevalence of surrogate in cohort i.e. P(Z=1)}
 }

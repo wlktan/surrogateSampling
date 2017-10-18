@@ -22,8 +22,11 @@ ValidateModel <- function(train.model,
   y0.eta <- rep(NA,length(which(val.Y == 0)))
 
   ############################# VALIDATION PHASE #############################
-  val.pred <- as.matrix(cbind(1,val.X)) %*% as.matrix(train.model$coefficients) %>%
-    Expit(.)
+  train.model$coefficients[is.na(train.model$coefficients)] <- 0
+  val.pred <- cbind(1,val.X) %*% as.matrix(train.model$coefficients)
+  y1.eta <- val.pred[which(val.Y == 1)]
+  y0.eta <- val.pred[which(val.Y == 0)]
+
   valROC <- try(prediction(predictions = val.pred,
                            labels = val.Y,
                            label.ordering = c(0,1)),silent=TRUE)
