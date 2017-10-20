@@ -15,9 +15,12 @@
 #'
 TrainModel <- function(train.df,
                        Y = "Y",
+                       feat= "X",
+                       surr = "Z",
                        model = "glm"){
 
-  train.X <- as.matrix(train.df[,grep("X|Z",names(train.df), perl=TRUE)])
+  train.X <- as.matrix(train.df[,grep(paste(feat,surr,sep="|"),
+                                      names(train.df), perl=TRUE)])
   train.Y <- train.df[,Y] %>%
     unlist(.)
   n_cases <- sum(train.Y)
@@ -25,8 +28,8 @@ TrainModel <- function(train.df,
 
   ########### DEFAULT parameters ######
   beta0_hat <- NA
-  betaZ.hat <- rep(NA,length(grep("Z",names(train.df), perl=TRUE)))
-  betaX.hat <- rep(NA,length(grep("X",names(train.df), perl=TRUE)))
+  betaZ.hat <- rep(NA,length(grep(surr,names(train.df), perl=TRUE)))
+  betaX.hat <- rep(NA,length(grep(feat,names(train.df), perl=TRUE)))
   auc_train <- 0.5
 
   ############################# TRAIN MODEL  #############################
@@ -63,8 +66,8 @@ TrainModel <- function(train.df,
         ifelse(class(.) != "try-error", ., 0.5)
       
       beta0_hat <- as.matrix(train.model$coefficients)[grep("Intercept",names(train.model$coefficients))]
-      betaZ.hat <- as.matrix(train.model$coefficients)[grep("Z",names(train.model$coefficients))]
-      betaX.hat <- as.matrix(train.model$coefficients)[grep("XX",names(train.model$coefficients))]
+      betaZ.hat <- as.matrix(train.model$coefficients)[grep(surr,names(train.model$coefficients))]
+      betaX.hat <- as.matrix(train.model$coefficients)[grep(paste0(feat,feat),names(train.model$coefficients))]
     }
   }
   
@@ -94,8 +97,8 @@ TrainModel <- function(train.df,
         ifelse(class(.) != "try-error", ., 0.5)
       
       beta0_hat <- as.matrix(train.model$a0)
-      betaZ.hat <- as.matrix(train.model$beta)[grep("^Z",rownames(train.model$beta))]
-      betaX.hat <- as.matrix(train.model$beta)[grep("^X", rownames(train.model$beta))]
+      betaZ.hat <- as.matrix(train.model$beta)[grep(paste0("^",surr),rownames(train.model$beta))]
+      betaX.hat <- as.matrix(train.model$beta)[grep(paste0("^",feat), rownames(train.model$beta))]
     }
   }
 

@@ -4,7 +4,7 @@
 \alias{TrainModel}
 \title{TrainModel}
 \usage{
-TrainModel(train.df, Y = "Y", model = "glm")
+TrainModel(train.df, Y = "Y", feat = "X", surr = "Z", model = "glm")
 }
 \arguments{
 \item{train.df}{Data frame containing training data}

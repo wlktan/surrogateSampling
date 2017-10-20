@@ -13,8 +13,12 @@
 #'
 ValidateModel <- function(train.model,
                           val.df,
+                          feat = "X",
+                          surr = "Z",
                           Y = "Y"){
-  val.X <- as.matrix(val.df[,grep("X|Z",names(val.df), perl=TRUE)])
+  val.X <- as.matrix(val.df[,grep(paste(feat,surr,sep="|"),
+                                  names(val.df),
+                                  perl=TRUE)])
   val.Y <- val.df[,Y] %>%
     as.numeric(.)
 

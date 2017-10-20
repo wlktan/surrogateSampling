@@ -4,7 +4,7 @@
 \alias{ValidateModel}
 \title{ValidateModel}
 \usage{
-ValidateModel(train.model, val.df, Y = "Y")
+ValidateModel(train.model, val.df, feat = "X", surr = "Z", Y = "Y")
 }
 \arguments{
 \item{train.model}{The trained model object}
