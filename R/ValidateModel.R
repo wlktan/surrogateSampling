@@ -11,7 +11,7 @@
 #'   eta: vector of linear predictions
 #'   auc_val: Estimated validation AUC
 #'
-ValidateModel <- function(train.model,
+ValidateModel <- function(est.coef,
                           val.df,
                           feat = "X",
                           surr = "Z",
@@ -26,14 +26,15 @@ ValidateModel <- function(train.model,
   y0.eta <- rep(NA,length(which(val.Y == 0)))
 
   ############################# VALIDATION PHASE #############################
-  train.model$coefficients[is.na(train.model$coefficients)] <- 0
-  val.pred <- cbind(1,val.X) %*% as.matrix(train.model$coefficients)
+  est.coef[is.na(est.coef)] <- 0 # bias?
+  val.pred <- cbind(1,val.X) %*% as.matrix(est.coef)
   y1.eta <- val.pred[which(val.Y == 1)]
   y0.eta <- val.pred[which(val.Y == 0)]
 
   valROC <- try(prediction(predictions = val.pred,
                            labels = val.Y,
-                           label.ordering = c(0,1)),silent=TRUE)
+                           label.ordering = c(0,1)),
+                silent=TRUE)
   auc_val <- try(as.numeric(performance(valROC,"auc")@y.values),silent=TRUE) %>%
     ifelse(class(.) != "try-error",., 0.5)
 

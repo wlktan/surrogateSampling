@@ -4,14 +4,14 @@
 \alias{ValidateModel}
 \title{ValidateModel}
 \usage{
-ValidateModel(train.model, val.df, feat = "X", surr = "Z", Y = "Y")
+ValidateModel(est.coef, val.df, feat = "X", surr = "Z", Y = "Y")
 }
 \arguments{
-\item{train.model}{The trained model object}
-
 \item{val.df}{Data frame containing training data}
 
 \item{Y}{Column name of the binary outcome}
+
+\item{train.model}{The trained model object}
 }
 \value{
 A list of

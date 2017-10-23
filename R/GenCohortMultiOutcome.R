@@ -41,18 +41,9 @@ GenCohortMultiOutcome <- function(n,
   }
 
   # Generate design matrix
-  Z <- matrix(data = NA, nrow = n, ncol = length(probZ))
-  for(i in 1:length(probZ)) Z[,i] <- rbinom(n,1,probZ[i])
-
-  X.sig <- matrix(rbinom(n*p_nonzero, 1, probX),
-                  nrow = n,
-                  ncol = p_nonzero,
-                  byrow = TRUE)
-  X.nosig <- matrix(rbinom(n*(p - p_nonzero), 1, probX),
-                    nrow = n,
-                    ncol = p - p_nonzero,
-                    byrow = TRUE)
-  x <- cbind(Z, X.sig, X.nosig) # design matrix of size n x (K + p)
+  Z <- apply(as.data.frame(probZ), 1, function(z) rbinom(n,1,z))
+  X <- apply(as.data.frame(probX), 1, function(x) rbinom(n,1,x))
+  x <- cbind(Z, X) # design matrix of size n x (K + p)
 
   # Data checks for dimensions
   #stopifnot(length(beta0) == K)
@@ -60,7 +51,7 @@ GenCohortMultiOutcome <- function(n,
   stopifnot(length(betaX) == p)
   #stopifnot(dim(beta.mat) == c(K + p, K))
   stopifnot(length(probZ) == K)
-  stopifnot(length(probX) == 1)
+  #stopifnot(length(probX) == 1)
   stopifnot(dim(x) == c(n, K + p))
 
   # Generate one cohort
@@ -87,8 +78,10 @@ GenCohortMultiOutcome <- function(n,
   spec.tb <- matrix(data = NA, nrow = K, ncol = K)
   for(i in 1:K){
     for(j in 1:K){
-      sens.tb[i,j] <- CalcMetrics(test.vec = x[,i], truth.vec = y[,j])$metrics.list["sens"]
-      spec.tb[i,j] <- CalcMetrics(test.vec = x[,i], truth.vec = y[,j])$metrics.list["spec"]
+      sens.tb[i,j] <- CalcMetrics(test.vec = x[,i],
+                                  truth.vec = y[,j])$metrics.list["sens"]
+      spec.tb[i,j] <- CalcMetrics(test.vec = x[,i],
+                                  truth.vec = y[,j])$metrics.list["spec"]
       if(i == j){
         metrics <- rbind(metrics,
                          c(Finding = j,
