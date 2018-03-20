@@ -6,7 +6,7 @@
 \usage{
 GenCohortSingleOutcome(n = 1e+05, p = 250, p_nonzero = 30,
   beta0 = -14.75, betaZ = c(4.25, 2.25, 3.35), betaX, probZ = c(0.065,
-  0.34, 0.62), probX)
+  0.34, 0.62), probX, alpha0 = 0, alpha1 = 1, true.gamma = NULL)
 }
 \arguments{
 \item{n}{cohort size}
@@ -24,6 +24,12 @@ GenCohortSingleOutcome(n = 1e+05, p = 250, p_nonzero = 30,
 \item{probZ}{vector of probabilities of potential surrogate, i.e. P(Z=1)}
 
 \item{probX}{vector of probabilities of features, i.e. P(X=1)}
+
+\item{alpha0}{recalibration intercept}
+
+\item{alpha1}{recalibration slope}
+
+\item{true.gamma}{Additional features}
 }
 \value{
 A list with the following components:

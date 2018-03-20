@@ -26,8 +26,8 @@ ValidateModel <- function(est.coef,
   y0.eta <- rep(NA,length(which(val.Y == 0)))
 
   ############################# VALIDATION PHASE #############################
-  est.coef[is.na(est.coef)] <- 0 # bias?
-  val.pred <- cbind(1,val.X) %*% as.matrix(est.coef)
+  #est.coef[is.na(est.coef)] <- 0 # bias?
+  val.pred <- as.matrix(cbind(1,val.X)) %*% as.matrix(est.coef)
   y1.eta <- val.pred[which(val.Y == 1)]
   y0.eta <- val.pred[which(val.Y == 0)]
 

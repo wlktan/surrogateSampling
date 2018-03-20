@@ -10,6 +10,9 @@
 #' @param betaX vector of true coefficients for features X
 #' @param probZ vector of probabilities of potential surrogate, i.e. P(Z=1)
 #' @param probX vector of probabilities of features, i.e. P(X=1)
+#' @param alpha0 recalibration intercept
+#' @param alpha1 recalibration slope
+#' @param true.gamma Additional features
 #' @keywords generate data
 #' @export
 #' @return A list with the following components:
@@ -26,7 +29,10 @@ GenCohortSingleOutcome <- function(n = 100000,
                              betaZ = c(4.25,2.25,3.35),
                              betaX,
                              probZ = c(0.065,0.34,0.62),
-                             probX){
+                             probX,
+                             alpha0 = 0,
+                             alpha1 = 1,
+                             true.gamma = NULL){
 
   # Checks inputs
   stopifnot(n > 0 | p > 0 | p_nonzero > 0) # cohort size and num features need to be positive
@@ -48,7 +54,15 @@ GenCohortSingleOutcome <- function(n = 100000,
              function(x) rbinom(n,1,x))
 
   true.beta <- c(beta0, betaZ, betaX)
-  yprob <- Expit(cbind(rep(1,n),Z,X) %*% true.beta)
+  
+  yprob <- Expit(alpha0 + alpha1*cbind(rep(1,n),Z,X) %*% true.beta)
+  
+  if(!is.null(true.gamma)){
+    yprob <- Expit(alpha0 + 
+                     alpha1*cbind(rep(1,n),Z,X) %*% true.beta +
+                     X %*% true.gamma)
+  }
+  
   Y <- rbinom(n,1,yprob)
   
   trueAUC <- try(auc(Y,c(yprob)), silent = TRUE)
